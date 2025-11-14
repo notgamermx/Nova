@@ -22,24 +22,9 @@ const GenerateResponseOutputSchema = z.object({
 export type GenerateResponseOutput = z.infer<typeof GenerateResponseOutputSchema>;
 
 export async function generateResponse(input: GenerateResponseInput): Promise<GenerateResponseOutput> {
-  return generateResponseFlow(input);
+  // Return a static response to simulate offline mode.
+  return Promise.resolve({
+    response:
+      "I'm currently running in offline mode. Please connect to the internet to chat with Nova.",
+  });
 }
-
-const generateResponsePrompt = ai.definePrompt({
-  name: 'generateResponsePrompt',
-  input: {schema: GenerateResponseInputSchema},
-  output: {schema: GenerateResponseOutputSchema},
-  prompt: `{{prompt}}`,
-});
-
-const generateResponseFlow = ai.defineFlow(
-  {
-    name: 'generateResponseFlow',
-    inputSchema: GenerateResponseInputSchema,
-    outputSchema: GenerateResponseOutputSchema,
-  },
-  async input => {
-    const {output} = await generateResponsePrompt(input);
-    return output!;
-  }
-);
